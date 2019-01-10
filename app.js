@@ -9,8 +9,39 @@ const app = express();
 // setup morgan which gives us http request logging
 app.use(morgan('dev'));
 
+const jsonParser = require('body-parser').json;
+app.use(jsonParser());
+
+// Mongoose/MongoDB connection
+const mongoose = require('mongoose');
+mongoose.connect('mongodb://localhost:27017/fsjstd-restapi');
+const db = mongoose.connection;
+// connection error
+db.on('error', (err) => {
+  console.error('Connection Error', err);
+});
+// connnect success
+db.once('open', () => {
+  console.log('db connection successful!');
+  // Do I need to db.close() this?
+});
 
 // TODO setup your api routes here
+// User Routes
+app.get('/api/users', (req, res) => {
+  res.json(200, 'api/users are cool');
+});
+
+// Course Routes
+app.get('/api/courses', (req, res) => {
+  res.json(200, 'api/courses are awesome!');
+});
+
+app.get('/api/courses/:id', (req, res) => {
+  res.json(200, `Course ID: ${req.params.id}`)
+});
+
+
 
 // setup a friendly greeting for the root route
 app.get('/', (req, res) => {
