@@ -8,9 +8,10 @@ const enableGlobalErrorLogging = process.env.ENABLE_GLOBAL_ERROR_LOGGING === 'tr
 const app = express();
 // setup morgan which gives us http request logging
 app.use(morgan('dev'));
-
+// Body-Parser
 const jsonParser = require('body-parser').json;
 app.use(jsonParser());
+
 
 // Mongoose/MongoDB connection
 const mongoose = require('mongoose');
@@ -26,22 +27,16 @@ db.once('open', () => {
   // Do I need to db.close() this?
 });
 
+// @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+// Routes
+const courseRoutes = require('./routes/courses.route');
+const userRoutes = require('./routes/users.route');
+
 // TODO setup your api routes here
-// User Routes
-app.get('/api/users', (req, res) => {
-  res.json(200, 'api/users are cool');
-});
+app.use('/api/courses', courseRoutes);
+app.use('/api/users', userRoutes);
 
-// Course Routes
-app.get('/api/courses', (req, res) => {
-  res.json(200, 'api/courses are awesome!');
-});
-
-app.get('/api/courses/:id', (req, res) => {
-  res.json(200, `Course ID: ${req.params.id}`)
-});
-
-
+// @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 
 // setup a friendly greeting for the root route
 app.get('/', (req, res) => {
