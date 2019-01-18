@@ -4,6 +4,7 @@ const router = express.Router();
 const bodyParser = require('body-parser');
 router.use(bodyParser.urlencoded({extended: false}));
 const Course = require('../models/course.model').Course;
+const mongoose = require('mongoose');
 
 // api/courses Routes
 // GET /api/courses 200 - Returns a list of courses (including the user that owns each course)
@@ -31,7 +32,20 @@ router.get('/:id', (req, res, next) => {
 
 // POST /api/courses 201 - Creates a course, sets the Location header to the URI for the course, and returns no content
 router.post('/', (req, res, next) => {
-  res.status(201).json('You have posted a course to the catalog!')
+
+  // creates a new course object
+  const course = new Course({
+    title: req.body.title,
+    description: req.body.description,
+    estimatedTime: req.body.estimatedTime,
+    materialsNeeded: req.body.materialsNeeded
+  });
+  // saves the new course in the MongoDB
+  course.save()
+        .then(courseResult => {
+          console.log(courseResult);
+          res.status(201).json('You have posted a course to the catalog!')
+        });
 });
 
 // PUT /api/courses/:id 204 - Updates a course and returns no content
