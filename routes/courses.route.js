@@ -97,7 +97,7 @@ router.post('/', (req, res, next) => {
         })
         .catch(err => {
           console.log(err);
-          res.status(403).json('You do not have permissions to delete this course');
+          res.status(403).json('An error occured while trying to save the course');
         });;
 });
 
@@ -110,7 +110,7 @@ router.put('/:id', function(req, res, next) {
         return res.sendStatus(204);
       });
   } else {
-    const err = new Error('user does not have permissions');
+    const err = new Error('user does not have permissions to update');
     err.status = 403;
     next(err)
    }
