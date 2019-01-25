@@ -1,0 +1,207 @@
+Unit 09 - REST API
+Project Instructions
+MongoDB localhost:27017
+_______________________________
+Before You Start:
+===============================
+[X] GitHub
+    [X] Create a new repo for this project.
+[X] Create a .gitignore and use it to make sure your node_modules folder is not stored in
+    or tracked by your repo.
+[!] Create a README.md file for your repo that explains what the project is and anything
+    your user or fellow developers might need to know to use the project.
+
+[X] Ensure that you have Node installed
+    [X] Make sure you have a recent version of Node: 8.0.0 or later. For instructions on
+        installing and updating Node.js see our Installing Node.js and NPM on Windows or
+        Installing Node.js and NPM on Mac installation guides.
+
+[X] Ensure that you have MongoDB installed
+    [X] Open a Command Prompt (on Windows) or Terminal (on Mac OS X) instance and run the
+        command mongod (or sudo mongod) to start the MongoDB daemon.
+    [X] If that command failed then you’ll need to install MongoDB.
+
+_______________________________
+Project Instructions:
+===============================
+To complete this project, follow the instructions below. If you get stuck, ask a question
+on Slack or in the Treehouse Community.
+
+[X] Install Node modules and get the database setup
+    [X] Open a Command Prompt (on Windows) or Terminal (on Mac OS X and Linux) instance and
+        browse to the root project folder
+    [X] Run the command npm install to install the required dependencies.
+    [X] Run the command npm run seed to create your application's database and populate it
+        with data.
+    [X] Run the command npm start to run the Node.js Express application.
+    [X] You can press Ctrl-C to stop the Node.js REST API.
+
+[X] Working on the project
+    [X] The app.js file located in the root of the project folder configures Express to
+        serve a simple REST API. You'll update this file to add your REST API routes.
+    [X] You'll build your application by adding .js files to the project. Use folders as you
+        see fit to organize your application's files.
+[X] Install and Configure Mongoose
+    [X] Use npm to install Mongoose (the module is named mongoose.)
+    [X] Configure Mongoose to use the fsjstd-restapi MongoDB database that you generated when
+        setting up the project.
+    [X] Write a message to the console if there's an error connecting to the database.
+    [X] Write a message to the console once the connection has been successfully opened.
+
+[X] Create your Mongoose schema and models
+    [X] Your database schema should match the following requirements:
+        [X] User
+            [X] _id (ObjectId, auto-generated)
+            [X] firstName (String)
+            [X] lastName (String)
+            [X] emailAddress (String)
+            [X] password (String)
+
+        [X] Course
+            [X] _id (ObjectId, auto-generated)
+            [X] user (_id from the users collection)
+            [X] title (String)
+            [X] description (String)
+            [X] estimatedTime (String)
+            [X] materialsNeeded (String)
+
+    IMPORTANT NOTE: 
+        When defining models for an existing database...
+        Be careful when naming your models and model properties! Model names and model
+        properties need to match the above provided names exactly. Otherwise, your database
+        access code won't work as expected.
+        
+    [X] Create the user routes
+        Set up the following routes (listed in the format HTTP METHOD Route HTTP Status Code):
+        [X] GET /api/users 200 - Returns the currently authenticated user
+        [X] POST /api/users 201 - Creates a user, sets the Location header to "/", and returns
+            no content
+    [X] Create the course routes
+        Set up the following routes (listed in the format HTTP METHOD Route HTTP Status Code):
+            [X] GET /api/courses 200 - Returns a list of courses (including the user that owns
+                each course)
+            [X] GET /api/courses/:id 200 - Returns the course (including the user that owns
+                the course) for the provided course ID
+            [X] POST /api/courses 201 - Creates a course, sets the Location header to the URI
+                for the course, and returns no content
+            [X] PUT /api/courses/:id 204 - Updates a course and returns no content
+            [X] DELETE /api/courses/:id 204 - Deletes a course and returns no content
+
+[X] Update User and Course routes
+    [X] Update the User and Course POST and PUT routes to validate that the request body
+        contains the following required values. Return validation errors when necessary.
+        [X] User
+            [X] firstName
+            [X] lastName
+            [X] emailAddress
+            [X] password
+        
+        [X] Course
+            [X] title
+            [X] description
+        
+        [X] Implement validations within your route handlers or your Mongoose models.
+            [X]  Mongoose validation gives you a rich set of tools to validate user data.
+                See http://mongoosejs.com/docs/validation.html for more information.
+            [X] Use the Express next() function in each route handler to pass any Mongoose
+                validation errors to the global error handler.
+            [X] Send validation error(s) with a 400 status code to the user.
+
+[X] Hashing the password
+    [X] Update the POST /api/users route to hash the user's password before persisting
+        the user to the database.
+    [X] For security reasons, we don't want to store user passwords in the database as
+        clear text.
+    [X] Use the bcrypt npm package to hash the user's password.
+        See https://github.com/kelektiv/node.bcrypt.js/ for more information.
+    [X] Use bcrypt.compare(Hash?) to compare the hashed password. (added by Matt Griffith!)
+
+[X] Set up permissions to require users to be signed in
+    [X] Add a middleware function that attempts to get the user credentials from the
+        Authorization header set on the request.
+    [X] You can use the basic-auth npm package to parse the Authorization header into the
+        user's credentials.
+    [X] The user's credentials will contain two values: a name value—the user's email
+            address—and a pass value—the user's password (in clear text).
+    [X] Use the user's email address to attempt to retrieve the user from the database.
+    [X] If a user was found for the provided email address, then check that user's stored
+        hashed password against the clear text password given using bcrypt.
+    [X] If the password comparison succeeds, then set the user on the request so that each
+        following middleware function has access to it.
+    [X] If the password comparison fails, then return a 401 status code to the user.
+    [X] Use this middleware in the following routes:
+        [X] GET /api/users (does not include POST /api/users)
+        [X] POST /api/courses
+        [X] PUT /api/courses/:id
+        [X] DELETE /api/courses/:id
+
+[X] Test the routes
+[X] Postman is an application that you will use to explore and test REST APIs. We’ve
+        provided you with a collection of Postman requests as part of the project files.
+
+    Here’s how to load the provided collection into Postman:
+    [X] If you haven’t already, install Postman. Links and instructions are available on
+        their website at https://www.getpostman.com/.
+    [X] Once you have Postman installed and open, click on the “Import” button in the top
+        left hand corner of the application’s window.
+    [X] In the opened dialog, click the “Choose Files” button and browse to the folder
+        that contains your project files.
+    [X] Select the RESTAPI.postman_collection.json file.
+    [X] You should now see the FSJS Techdegree: REST API Project collection in the left
+        hand pane of the main Postman window.
+    [X] Be sure that your REST API is currently running (see the previous project step
+        for details).
+    [X] Click on one of the available requests to load it into a tab. Click on the Send
+        button to issue the request to the local server.
+    [X] When testing routes that require authentication, make sure to set the Authorization
+        Type in postman to Basic Auth to enter the user's username (their email address)
+        and password.
+
+[X] Debugging help
+    [X] As you build out your REST API, you’ll naturally encounter errors and unexpected
+        behavior. Here are some reminders and suggestions on how to debug your REST API.
+    [X] You can edit the nodemon.json file to enable additional logging options for your
+        application.
+    [X] Under the env section in the JSON configuration, set the ENABLE_GLOBAL_ERROR_LOGGING
+        to enable logging of all errors handled by the global error handler.
+    [X] If you change the nodemon configuration while the application is currently running,
+        you'll need to press Ctrl-C to stop the application and re-run the npm start command.
+    [X] If Node.js crashed as a result of the error, you can look in the Command Prompt
+        (on Windows) or Terminal (on Mac OS X and Linux) window and see the exception
+        information.
+    [X] Sometimes errors don’t result in exceptions, but instead are returned as 400 or
+        500 HTTP status codes. Errors returned from your REST API will be logged in
+        Postman.
+    NOTE: For a deeper, more detailed analysis of the state of your application, you can
+        use Google Chrome to debug your Node.js application. Watch the Debugging Node
+        Applications With Google Chrome workshop for more information.
+
+[X] Add good code comments
+_______________________________
+Extra Credit:
+===============================
+[X] Add additional user email address validations to the POST /api/users route
+    [X] Validate that the provided email address value is in fact a valid email address.
+    [X] Validate that the provided email address isn't already associated with an existing
+        user record.
+    MATT ADD:
+    Use REGEX: /^[a-zA-Z0-9.!#$%&'*+\/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$/
+
+[X] Ensure that a user can only edit and delete their own courses
+    [X] Update the PUT /api/courses/:id and DELETE /api/courses/:id routes to check if
+        the course for the provided :id route parameter value is owned by the currently
+        authenticated user.
+    [X] Return a 403 status code if the current user doesn't own the requested course.
+
+[X] Course routes ( .populate() )
+    [X] When returning a list of courses using the GET /api/courses route or a single
+        course using the GET /api/courses/:id route, use Mongoose deep population to
+        return only the firstName and lastName properties of the related user on the
+        course model. This will hide the user’s private details, like passwords and
+        emails, from other users.
+    [X] Example user object returned:
+        { "_id": "wiubfh3eiu23rh89hcwib",
+         "firstName": "Sam",
+         "lastName": "Smith"
+        }
+    NOTE: See the Project Resources section for more information about deep population.
