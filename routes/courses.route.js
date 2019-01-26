@@ -97,20 +97,23 @@ router.post('/', (req, res, next) => {
         })
         .catch(err => {
           console.log(err);
-          res.status(403).json('An error occured while trying to save the course');
+          // res.status(403).json('Unable to add the course');
+          // const addErr = new Error('user does not have delete permissions');
+          err.status = 403;
+          next(err)
         });;
 });
 
 // PUT /api/courses/:id 204 - Updates a course and returns no content
-router.put('/:id', function(req, res, next) {
+router.put('/:id', (req, res, next) => {
   // if the courses user matches the current auth'd user
   if (req.course.user.toString() === req.user._id.toString()) {
-      req.course.update(req.body, (err, res) => {
+      req.course.update(req.body, (err /*, res*/) => {
         if(err) return next(err);
         return res.sendStatus(204);
       });
   } else {
-    const err = new Error('user does not have permissions to update');
+    const err = new Error('user does not have update permissions');
     err.status = 403;
     next(err)
    }
@@ -128,10 +131,14 @@ router.delete('/:id', (req, res, next) => {
           })
           .catch(err => {
             console.log(err);
-            res.status(403).json('You do not have permissions to delete this course');
+            err.sendStatus(403);
+            // res.status(403).json('You do not have permissions to delete this course');
           });
   } else {
-    res.status(403).json('You do not have permissions to delete this course')
+    // res.status(401).json('You do not have permissions to delete this course')
+    const err = new Error('user does not have delete permissions');
+    err.status = 401;
+    next(err)
   };
 });
 
